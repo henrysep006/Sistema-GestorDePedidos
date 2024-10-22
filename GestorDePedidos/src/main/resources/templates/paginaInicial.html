@@ -22,6 +22,11 @@
 
         <!-- Título "Pedidos Recebidos" -->
         <h1>Pedidos Recebidos</h1>
+        <div class="pesquisa">
+            <label for="codigoPedido">Buscar Pedido:</label>
+            <input type="text" id="codigoPedido" placeholder="Digite o número do pedido">
+            <button id="buscaPedido">Buscar</button>
+        </div>
 
         <!-- Tabela de pedidos -->
         <table id="tabela">
@@ -43,7 +48,7 @@
                 <!-- Adicione mais linhas conforme necessário -->
             </tbody>
         </table>
-
+<div id="mensagem"></div>
         <!-- Botões abaixo da tabela -->
         <div class="botoes">
             <button class="ver-produtos">Ver Produtos</button>
@@ -62,15 +67,73 @@
 $(document).ready(function () {
 
     $.get("http://localhost:3000/pedido", function(data, status){
-                for (i = 0; i < data.length; i++)  {
+                function resfazerTabela(){for (i = 0; i < data.length; i++)  {
+
+
+
             var novaLinha = "<tr><td>" + data[i].npedido + "</td><td>" + data[i].produto  + 
                  "</td><td>" + data[i].cliente  +  "</td><td>" + data[i].status  +  "</td><td>" + data[i].data_de_entrega  +
                   "</td><td>" + data[i].qtd  +"</td></tr>";
             $('#tabela tbody').append(novaLinha); 
-        }});
+            $('#mensagem').text("")
+                 }}
+
+resfazerTabela();
+
+$('#buscaPedido').click(function(){
+const codPedido=$('#codigoPedido').val();
+
+
+$('#tabela tbody').empty();
+$('#mensagem').text("")
+
+if(codPedido){
+
+
+    for (i = 0; i < data.length; i++){
+    if(data[i].npedido==codPedido){
+var pedEncontrado="<tr><td>" + data[i].npedido + "</td><td>" + data[i].produto  + 
+                 "</td><td>" + data[i].cliente  +  "</td><td>" + data[i].status  +  "</td><td>" + data[i].data_de_entrega  +
+                  "</td><td>" + data[i].qtd  +"</td></tr>";
+
+                  $('#tabela tbody').append(pedEncontrado); 
+                  $('#mensagem').text("")
+                  break;
+                 }else{
+
+                    $('#mensagem').text("Não achamos pedidos com esse código")
+             
+
+
+
+                 }}
+                 }else{
+$('#mensagem').text("Não achamos pedidos com esse código")
+resfazerTabela();
+
+
+                 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 })
+
+
+        });
+    })
+
+
 </script>
 
 </body>
