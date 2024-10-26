@@ -1,0 +1,145 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+}
+.pesquisa{
+
+margin: 5px;
+
+}
+.painel {
+    width: 90%;
+    max-width: 1200px;
+    margin: 40px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+/* Cabeçalho com logo */
+header {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 20px;
+}
+
+.logo img {
+    max-width: 150px;
+    height: auto;
+}
+
+/* Banner */
+.banner img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* Título */
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+/* Tabela de pedidos */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+thead {
+    background-color: #4CAF50;
+    color: white;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+tbody tr:hover {
+    background-color: #f2f2f2;
+}
+
+/* Botões */
+.botoes {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.botoes button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.pesquisa .botao{
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 5px 10px;
+
+}
+
+
+.botoes button:hover {
+    background-color: #45a049;
+}
+
+/* Botão "Novo Pedido" */
+.novo-pedido {
+    text-align: center;
+}
+
+.btn-novo-pedido {
+    background-color: #007BFF;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-novo-pedido:hover {
+    background-color: #0056b3;
+}
+.editBtn{
+
+    background-color: #5d95d1;
+    color: white;
+    margin-right: 10px;
+    padding: 2px 3px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+
+}
+.deleteBtn{
+
+    background-color: #ca5353;
+    color: white;
+    padding: 2px 3px;
+ 
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+   
+}

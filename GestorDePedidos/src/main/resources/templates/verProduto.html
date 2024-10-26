@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Pedidos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="painel">
+        <div style="display: flex; justify-content: right;">
+            <img src="voltar.png" onclick="window.location.href='pipaginainicial.html'" height="30px" width="30px" alt="voltar">
+        </div>
+        <header>
+            <div class="logo">
+                <img src="image.png" alt="Logo Empresa">
+            </div>
+        </header>
+
+        <div class="banner">
+            <img src="" alt="">
+        </div>
+
+        <h1>Produtos registrados</h1>
+        <div class="pesquisa">
+            <label for="codigoProduto">Buscar produto:</label>
+            <input type="text" id="codigoProduto" placeholder="Digite o número do produto">
+            <button id="buscaProduto" class="botao">Buscar</button>
+        </div>
+
+        <table id="tabela">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Produto</th>
+                    <th>Logotipo</th>
+                    <th>Custo UN.</th>
+                    <th>Material</th>
+                    <th>Cor</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- As linhas da tabela serão preenchidas dinamicamente -->
+            </tbody>
+        </table>
+
+        <div id="editForm" style="display: none;">
+            <h2>Editar Dados</h2>
+            <form id="form">
+                <label for="editId">ID:</label>
+                <input type="text" id="editId" name="editId" readonly><br><br>
+                <label for="editProduto">Produto:</label>
+                <input type="text" id="editProduto" name="editProduto"><br><br>
+                <label for="editLogotipo">Logotipo:</label>
+                <input type="text" id="editLogotipo" name="editLogotipo"><br><br>
+                <label for="editCusto">Custo UN:</label>
+                <input type="text" id="editCusto" name="editCusto"><br><br>
+                <label for="editMaterial">Material:</label>
+                <input type="text" id="editMaterial" name="editMaterial"><br><br>
+                <label for="editCor">Cor:</label>
+                <input type="text" id="editCor" name="editCor"><br><br>
+                <button type="button" id="saveBtn">Salvar</button>
+                <button type="button" id="cancelEditBtn">Cancelar</button>
+            </form>
+        </div>
+
+        <div id="newForm" style="display: none;">
+            <h2>Insira os dados do novo produto:</h2>
+            <form id="newItemForm">
+                <label for="produto">Produto:</label>
+                <input type="text" id="produto" name="produto" required><br><br>
+                <label for="logotipo">Logotipo:</label>
+                <input type="text" id="logotipo" name="logotipo" required><br><br>
+                <label for="custo">Custo UN:</label>
+                <input type="text" id="custoun" name="custoun" required><br><br>
+                <label for="material">Material:</label>
+                <input type="text" id="material" name="material" required><br><br>
+                <label for="cor">Cor:</label>
+                <input type="text" id="cor" name="cor" required><br><br>
+                <button type="submit" id="saveNewBtn">Salvar</button>
+                <button type="button" id="cancelNewBtn">Cancelar</button>
+            </form>
+        </div>
+
+        <div id="mensagem"></div>
+
+        <div class="novo-pedido">
+            <button class="btn-novo-pedido" id="new">Novo Produto</button>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const editForm = $('#editForm');
+            const newForm = $('#newForm');
+            const mensagem = $('#mensagem');
+            const tabelaBody = $('#tabela tbody');
+
+            // Função para reencher a tabela
+            function preencherTabela(data) {
+                tabelaBody.empty();
+                data.forEach(item => {
+                    tabelaBody.append(`
+                        <tr>
+                            <td>${item.id}</td>
+                            <td>${item.produto}</td>
+                            <td>${item.logotipo}</td>
+                            <td>${item.custoun}</td>
+                            <td>${item.material}</td>
+                            <td>${item.cor}</td>
+                            <td>
+                                <button class='editBtn' data-id="${item.id}">Editar</button>
+                                <button class='deleteBtn' data-id="${item.id}">Excluir</button>
+                            </td>
+                        </tr>
+                    `);
+                });
+            }
+
+         
+            $.get("http://localhost:3000/produto", function(data) {
+                preencherTabela(data);
+            });
+
+        
+            $('#new').click(function() {
+                newForm.show();
+                editForm.hide();
+            });
+
+        
+            $('#newItemForm').submit(function(event) {
+                event.preventDefault(); 
+
+                const novoProduto = {
+                    produto: $('#produto').val(),
+                    logotipo: $('#logotipo').val(),
+                    custoun: $('#custoun').val(),
+                    material: $('#material').val(),
+                    cor: $('#cor').val(),
+                };
+
+                $.ajax({
+                    url: 'http://localhost:3000/produto',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(novoProduto),
+                    success: function(response) {
+                        alert('Produto registrado com sucesso!');
+                        newForm.hide();
+                        $('#newItemForm')[0].reset(); 
+                        $.get("http://localhost:3000/produto", function(data) {
+                            preencherTabela(data);
+                        });
+                    },
+                    error: function() {
+                        alert('Erro ao salvar dados no servidor.');
+                    }
+                });
+            });
+
+          
+            function mostrarFormularioEdicao(item) {
+                $('#editId').val(item.id);
+                $('#editProduto').val(item.produto);
+                $('#editLogotipo').val(item.logotipo);
+                $('#editCusto').val(item.custoun);
+                $('#editMaterial').val(item.material);
+                $('#editCor').val(item.cor);
+                editForm.show();
+                newForm.hide();
+            }
+
+            tabelaBody.on('click', '.editBtn', function() {
+                const id = $(this).data('id');
+                $.get(`http://localhost:3000/produto/${id}`, function(item) {
+                    mostrarFormularioEdicao(item);
+                });
+            });
+
+        
+            $('#saveBtn').click(function() {
+                const id = $('#editId').val();
+                const produtoAtualizado = {
+                    produto: $('#editProduto').val(),
+                    logotipo: $('#editLogotipo').val(),
+                    custoun: $('#editCusto').val(),
+                    material: $('#editMaterial').val(),
+                    cor: $('#editCor').val(),
+                };
+
+                $.ajax({
+                    url: `http://localhost:3000/produto/${id}`,
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(produtoAtualizado),
+                    success: function() {
+                        alert('Dados atualizados com sucesso!');
+                        editForm.hide();
+               
+                        $.get("http://localhost:3000/produto", function(data) {
+                            preencherTabela(data);
+                        });
+                    },
+                    error: function() {
+                        alert('Erro ao salvar dados no servidor.');
+                    }
+                });
+            });
+
+            $('#cancelEditBtn').click(function() {
+                editForm.hide();
+            });
+
+          
+            $('#cancelNewBtn').click(function() {
+                newForm.hide();
+                $('#newItemForm')[0].reset(); 
+            });
+
+          
+            tabelaBody.on('click', '.deleteBtn', function() {
+                const id = $(this).data('id');
+                if (confirm('Tem certeza que deseja excluir este produto?')) {
+                    $.ajax({
+                        url: `http://localhost:3000/produto/${id}`,
+                        method: 'DELETE',
+                        success: function() {
+                            alert('Produto excluído com sucesso!');
+                         
+                            $.get("http://localhost:3000/produto", function(data) {
+                                preencherTabela(data);
+                            });
+                        },
+                        error: function() {
+                            alert('Erro ao excluir o produto.');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
