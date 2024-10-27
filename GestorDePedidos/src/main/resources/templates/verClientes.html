@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Clientes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="painel">
+        <div style="display: flex; justify-content: right;">
+            <img src="voltar.png" onclick="window.location.href='pipaginainicial.html'" height="30" width="30" alt="voltar">
+        </div>
+        <header>
+            <div class="logo">
+                <img src="image.png" alt="Logo Empresa">
+            </div>
+        </header>
+
+        <div class="banner">
+            <img src="" alt="">
+        </div>
+
+        <h1>Clientes Registrados</h1>
+        <div class="pesquisa">
+            <label for="codigoCliente">Buscar cliente:</label>
+            <input type="text" id="codigoCliente" placeholder="Digite o ID do cliente">
+            <button id="buscaCliente" class="save">Buscar</button>
+        </div>
+
+        <table id="tabela">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Endereço</th>
+               
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- As linhas da tabela serão preenchidas dinamicamente -->
+            </tbody>
+        </table>
+
+        <div id="editForm" style="display: none;">
+            <h2>Editar Dados do Cliente</h2>
+            <form id="form">
+                <label for="editId">ID:</label>
+                <input type="text" id="editId" name="editId" readonly><br><br>
+                <label for="editNome">Nome:</label>
+                <input type="text" id="editNome" name="editNome"><br><br>
+                <label for="editEmail">Email:</label>
+                <input type="email" id="editEmail" name="editEmail"><br><br>
+                <label for="editTelefone">Telefone:</label>
+                <input type="tel" id="editTelefone" name="editTelefone"><br><br>
+                <label for="editEndereco">Endereço:</label>
+                <input type="text" id="editEndereco" name="editEndereco"><br><br>
+            
+                <button type="button" id="saveBtn" class="save">Salvar</button>
+                <button type="button" id="cancelEditBtn" class="editBtn">Cancelar</button>
+            </form>
+        </div>
+
+        <div id="newForm" style="display: none;">
+            <h2>Insira os dados do novo cliente:</h2>
+            <form id="newItemForm">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome" required><br><br>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required><br><br>
+                <label for="telefone">Telefone:</label>
+                <input type="tel" id="telefone" name="telefone" required><br><br>
+                <label for="endereco">Endereço:</label>
+                <input type="text" id="endereco" name="endereco" required><br><br>
+     
+                <button type="submit" id="saveNewBtn" class="save">Salvar</button>
+                <button type="button" id="cancelNewBtn" class="editBtn">Cancelar</button>
+            </form>
+        </div>
+
+        <div id="mensagem"></div>
+
+        <div class="novo-pedido">
+            <button class="btn-novo-pedido" id="new">Novo Cliente</button>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const editForm = $('#editForm');
+            const newForm = $('#newForm');
+            const mensagem = $('#mensagem');
+            const tabelaBody = $('#tabela tbody');
+
+            // Função para preencher a tabela com clientes
+            function preencherTabela(data) {
+                tabelaBody.empty();
+                $('#mensagem').text("");
+                data.forEach(cliente => {
+                    tabelaBody.append(`
+                        <tr>
+                            <td>${cliente.id}</td>
+                            <td>${cliente.nome}</td>
+                            <td>${cliente.email}</td>
+                            <td>${cliente.telefone}</td>
+                            <td>${cliente.endereço}</td>
+                       
+                            <td>
+                                <button class='editBtn' data-id="${cliente.id}">Editar</button>
+                                <button class='deleteBtn' data-id="${cliente.id}">Excluir</button>
+                            </td>
+                        </tr>
+                    `);
+                });
+            }
+            function addBusca(data) {
+                $('#mensagem').text("");
+                data.forEach(cliente => {
+                    tabelaBody.append(`
+                        <tr>
+                            <td>${cliente.id}</td>
+                            <td>${cliente.nome}</td>
+                            <td>${cliente.email}</td>
+                            <td>${cliente.telefone}</td>
+                            <td>${cliente.endereço}</td>
+                      
+                            <td>
+                                <button class='editBtn' data-id="${cliente.id}">Editar</button>
+                                <button class='deleteBtn' data-id="${cliente.id}">Excluir</button>
+                            </td>
+                        </tr>
+                    `);
+                });
+            }
+
+            // Requisição para buscar e preencher a tabela de clientes
+            $.get("http://localhost:3000/cliente", function(data) {
+                preencherTabela(data);
+            });
+
+            // Abrir formulário para novo cliente
+            $('#new').click(function() {
+                newForm.show();
+                editForm.hide();
+            });
+
+            // Submeter novo cliente
+            $('#newItemForm').submit(function(event) {
+                event.preventDefault();
+
+                const novoCliente = {
+                    nome: $('#nome').val(),
+                    email: $('#email').val(),
+                    telefone: $('#telefone').val(),
+                    endereço: $('#endereco').val(),
+                    pedidos_feitos: $('#pedidosFeitos').val(),
+                };
+
+                $.ajax({
+                    url: 'http://localhost:3000/cliente',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(novoCliente),
+                    success: function(response) {
+                        alert('Cliente registrado com sucesso!');
+                        newForm.hide();
+                        $('#newItemForm')[0].reset();
+                        $.get("http://localhost:3000/cliente", function(data) {
+                            preencherTabela(data);
+                        });
+                    },
+                    error: function() {
+                        alert('Erro ao salvar dados no servidor.');
+                    }
+                });
+            });
+
+            // Mostrar formulário de edição de cliente
+            function mostrarFormularioEdicao(cliente) {
+                $('#editId').val(cliente.id);
+                $('#editNome').val(cliente.nome);
+                $('#editEmail').val(cliente.email);
+                $('#editTelefone').val(cliente.telefone);
+                $('#editEndereco').val(cliente.endereço);
+                $('#editPedidosFeitos').val(cliente.pedidos_feitos);
+                editForm.show();
+                newForm.hide();
+            }
+
+            // Editar cliente
+            tabelaBody.on('click', '.editBtn', function() {
+                const id = $(this).data('id');
+                $.get(`http://localhost:3000/cliente/${id}`, function(cliente) {
+                    mostrarFormularioEdicao(cliente);
+                });
+            });
+
+            // Salvar edição de cliente
+            $('#saveBtn').click(function() {
+                const id = $('#editId').val();
+                const clienteAtualizado = {
+                    nome: $('#editNome').val(),
+                    email: $('#editEmail').val(),
+                    telefone: $('#editTelefone').val(),
+                    endereço: $('#editEndereco').val(),
+                    pedidos_feitos: $('#editPedidosFeitos').val(),
+                };
+
+                $.ajax({
+                    url: `http://localhost:3000/cliente/${id}`,
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(clienteAtualizado),
+                    success: function() {
+                        alert('Dados atualizados com sucesso!');
+                        editForm.hide();
+                        $.get("http://localhost:3000/cliente", function(data) {
+                            preencherTabela(data);
+                        });
+                    },
+                    error: function() {
+                        alert('Erro ao salvar dados no servidor.');
+                    }
+                });
+            });
+
+            // Cancelar edição
+            $('#cancelEditBtn').click(function() {
+                editForm.hide();
+            });
+
+            // Cancelar novo cliente
+            $('#cancelNewBtn').click(function() {
+                newForm.hide();
+                $('#newItemForm')[0].reset();
+            });
+
+            // Excluir cliente
+            tabelaBody.on('click', '.deleteBtn', function() {
+                const id = $(this).data('id');
+                if (confirm('Tem certeza que deseja excluir este cliente?')) {
+                    $.ajax({
+                        url: `http://localhost:3000/cliente/${id}`,
+                        method: 'DELETE',
+                        success: function() {
+                            alert('Cliente excluído com sucesso!');
+                            $.get("http://localhost:3000/cliente", function(data) {
+                                preencherTabela(data);
+                            });
+                        },
+                        error: function() {
+                            alert('Erro ao excluir o cliente.');
+                        }
+                    });
+                }
+            })
+            
+          
+                 
+                 
+$('#buscaCliente').click(
+
+
+            function(){
+
+    const nomeCliente = $('#codigoCliente').val().toLowerCase();
+
+
+  $('#tabela tbody').empty();
+  $('#mensagem').text("");
+
+  if(nomeCliente){
+  $.get("http://localhost:3000/cliente", function(data) {
+      
+ 
+      let clienteEncontrado = false;
+     
+      data.forEach(item => {
+        
+          if (item.nome.toLowerCase() === nomeCliente) {
+              
+            
+              clienteEncontrado = true;
+              addBusca([item]);
+          }
+
+      });
+
+      if (!clienteEncontrado) {
+          $('#mensagem').text("Cliente não encontrado.");
+          
+      }
+
+  }).fail(function() {
+     
+      alert('Erro ao buscar o cliente. Verifique o nome informado.');
+      $.get("http://localhost:3000/cliente", function(data) {
+                            preencherTabela(data);
+                        });
+
+  });
+
+
+  
+}else {
+    
+    $.get("http://localhost:3000/cliente", function(data) {
+                            preencherTabela(data);
+                            
+                        });
+    
+}
+            }
+
+
+
+
+
+
+
+
+
+            )
+            
+            
+            
+            ;
+        });
+    </script>
+</body>
+</html>

@@ -9,7 +9,7 @@
 <body>
     <div class="painel">
         <div style="display: flex; justify-content: right;">
-            <img src="voltar.png" onclick="window.location.href='pipaginainicial.html'" height="30px" width="30px" alt="voltar">
+            <img src="voltar.png" onclick="window.location.href='verPedidos.html'" height="30" width="30" alt="voltar">
         </div>
         <header>
             <div class="logo">
@@ -17,15 +17,12 @@
             </div>
         </header>
 
-        <div class="banner">
-            <img src="" alt="">
-        </div>
 
         <h1>Produtos registrados</h1>
         <div class="pesquisa">
             <label for="codigoProduto">Buscar produto:</label>
-            <input type="text" id="codigoProduto" placeholder="Digite o número do produto">
-            <button id="buscaProduto" class="botao">Buscar</button>
+            <input type="text" id="codigoProduto" placeholder="Digite o nome do produto">
+            <button id="buscaProduto" class="save">Buscar</button>
         </div>
 
         <table id="tabela">
@@ -55,7 +52,7 @@
                 <label for="editLogotipo">Logotipo:</label>
                 <input type="text" id="editLogotipo" name="editLogotipo"><br><br>
                 <label for="editCusto">Custo UN:</label>
-                <input type="text" id="editCusto" name="editCusto"><br><br>
+                <input type="number" id="editCusto" name="editCusto"><br><br>
                 <label for="editMaterial">Material:</label>
                 <input type="text" id="editMaterial" name="editMaterial"><br><br>
                 <label for="editCor">Cor:</label>
@@ -73,13 +70,13 @@
                 <label for="logotipo">Logotipo:</label>
                 <input type="text" id="logotipo" name="logotipo" required><br><br>
                 <label for="custo">Custo UN:</label>
-                <input type="text" id="custoun" name="custoun" required><br><br>
+                <input type="number" id="custoun" name="custoun" required><br><br>
                 <label for="material">Material:</label>
                 <input type="text" id="material" name="material" required><br><br>
                 <label for="cor">Cor:</label>
                 <input type="text" id="cor" name="cor" required><br><br>
-                <button type="submit" id="saveNewBtn">Salvar</button>
-                <button type="button" id="cancelNewBtn">Cancelar</button>
+                <button type="submit" id="saveNewBtn" class="save">Salvar</button>
+                <button type="button" id="cancelNewBtn" class="editBtn">Cancelar</button>
             </form>
         </div>
 
@@ -100,7 +97,28 @@
 
             // Função para reencher a tabela
             function preencherTabela(data) {
+                $('#mensagem').text("");
                 tabelaBody.empty();
+                data.forEach(item => {
+                    tabelaBody.append(`
+                        <tr>
+                            <td>${item.id}</td>
+                            <td>${item.produto}</td>
+                            <td>${item.logotipo}</td>
+                            <td>${item.custoun}</td>
+                            <td>${item.material}</td>
+                            <td>${item.cor}</td>
+                            <td>
+                                <button class='editBtn' data-id="${item.id}">Editar</button>
+                                <button class='deleteBtn' data-id="${item.id}">Excluir</button>
+                            </td>
+                        </tr>
+                    `);
+                });
+            }
+            function addBusca(data) {
+                $('#mensagem').text("");
+           
                 data.forEach(item => {
                     tabelaBody.append(`
                         <tr>
@@ -139,7 +157,7 @@
                     logotipo: $('#logotipo').val(),
                     custoun: $('#custoun').val(),
                     material: $('#material').val(),
-                    cor: $('#cor').val(),
+                    cor: $('#cor').val()
                 };
 
                 $.ajax({
@@ -188,7 +206,7 @@
                     logotipo: $('#editLogotipo').val(),
                     custoun: $('#editCusto').val(),
                     material: $('#editMaterial').val(),
-                    cor: $('#editCor').val(),
+                    cor: $('#editCor').val()
                 };
 
                 $.ajax({
@@ -240,6 +258,77 @@
                     });
                 }
             });
+
+            $('#buscaProduto').click(
+
+
+            function(){
+  
+
+  const nomeProduto = $('#codigoProduto').val().toLowerCase();
+
+
+  $('#tabela tbody').empty();
+  $('#mensagem').text("");
+
+  if(nomeProduto){
+  $.get("http://localhost:3000/produto", function(data) {
+      
+ 
+      let produtoEncontrado = false;
+     
+      data.forEach(item => {
+        
+          if (item.produto.toLowerCase() === nomeProduto) {
+              
+            
+              produtoEncontrado = true;
+              addBusca([item]);
+          }
+
+      });
+
+      if (!produtoEncontrado) {
+          $('#mensagem').text("Produto não encontrado.");
+          
+      }
+
+  }).fail(function() {
+     
+      alert('Erro ao buscar o produto. Verifique o nome informado.');
+      $.get("http://localhost:3000/produto", function(data) {
+                            preencherTabela(data);
+                        });
+
+  });
+
+
+  
+}else {
+    
+    $.get("http://localhost:3000/produto", function(data) {
+                            preencherTabela(data);
+
+                        });
+    
+}
+            }
+
+
+
+
+
+
+
+
+
+            );
+
+
+
+
+
+
         });
     </script>
 </body>
