@@ -98,6 +98,7 @@ $(document).ready(function () {
     $.get("http://localhost:3000/pedido", function(pedido, status){
 
         $.get("http://localhost:3000/produto", function(prod, status){
+   $.get("http://localhost:3000/cliente", function(clie, status){
 
    const newForm = $('#newForm');
 
@@ -110,14 +111,14 @@ preencherClientes();
                     for (i = 0; i < pedido.length; i++)  {
 
                         let idProduto = pedido[i].produto;
-
-
 let produtoCorrespondente = prod.find(p => p.id === idProduto); 
-
 let nomeProduto = produtoCorrespondente ? produtoCorrespondente.produto : "Produto não encontrado";
 
+                       let idCliente = pedido[i].cliente;
+let clienteCorrespondente = clie.find(c => c.id === idCliente); 
+let nomeCliente = clienteCorrespondente ? clienteCorrespondente.nome : "Cliente não encontrado";
             var novaLinha = "<tr><td>" + pedido[i].npedido + "</td><td>" +nomeProduto+ 
-                 "</td><td>" + pedido[i].cliente  +  "</td><td>" + pedido[i].status  +  "</td><td>" + pedido[i].data_de_entrega  +
+                 "</td><td>" + nomeCliente  +  "</td><td>" + pedido[i].status  +  "</td><td>" + pedido[i].data_de_entrega  +
                   "</td><td>" + pedido[i].qtd  +"</td></tr>";
 
 
@@ -147,7 +148,7 @@ if(codPedido){
 
 
     for (i = 0; i < pedido.length; i++){
-    if(pedido[i].npedido===codPedido){
+    if(pedido[i].npedido==codPedido){
 
 
 
@@ -159,9 +160,13 @@ let nomeProduto = produtoCorrespondente ? produtoCorrespondente.produto : "Produ
 
 
 
+ let idCliente = pedido[i].cliente;
+let clienteCorrespondente = clie.find(c => c.id === idCliente); 
+let nomeCliente = clienteCorrespondente ? clienteCorrespondente.nome : "Cliente não encontrado";
+
 
 var pedEncontrado = "<tr><td>" + pedido[i].npedido + "</td><td>" + nomeProduto  + 
-     "</td><td>" + pedido[i].cliente  +  "</td><td>" + pedido[i].status  +  "</td><td>" + pedido[i].data_de_entrega  +
+     "</td><td>" + nomeCliente  +  "</td><td>" + pedido[i].status  +  "</td><td>" + pedido[i].data_de_entrega  +
       "</td><td>" + pedido[i].qtd  +"</td></tr>";
 
 
@@ -175,7 +180,7 @@ var pedEncontrado = "<tr><td>" + pedido[i].npedido + "</td><td>" + nomeProduto  
 
 if(tabelaBody.rows.length===0){
 
-                    $('#mensagem').text("Não achamos pedidos com esse código");
+                    $('#mensagem').text("Não achamos pedidos com esse código")
 
 }
 
@@ -203,7 +208,7 @@ resfazerTabela();
 
 
 
-});
+})
 
 
 function preencherProdutos() {
@@ -278,7 +283,7 @@ $('#newItemForm').submit(function(event) {
 
 
 
-
+   });
 
 
         });

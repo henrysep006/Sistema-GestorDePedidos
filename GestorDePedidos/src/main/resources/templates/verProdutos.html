@@ -38,42 +38,42 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- As linhas da tabela serão preenchidas dinamicamente -->
+              
             </tbody>
         </table>
 
         <div id="editForm" style="display: none;">
             <h2>Editar Dados</h2>
-            <form id="form">
-                <label for="editId">ID:</label>
+            <form id="editform">
+                <label for="editId" style="display: block;">ID:</label>
                 <input type="text" id="editId" name="editId" readonly><br><br>
-                <label for="editProduto">Produto:</label>
-                <input type="text" id="editProduto" name="editProduto"><br><br>
-                <label for="editLogotipo">Logotipo:</label>
-                <input type="text" id="editLogotipo" name="editLogotipo"><br><br>
-                <label for="editCusto">Custo UN:</label>
-                <input type="number" id="editCusto" name="editCusto"><br><br>
-                <label for="editMaterial">Material:</label>
-                <input type="text" id="editMaterial" name="editMaterial"><br><br>
-                <label for="editCor">Cor:</label>
-                <input type="text" id="editCor" name="editCor"><br><br>
-                <button type="button" id="saveBtn">Salvar</button>
-                <button type="button" id="cancelEditBtn">Cancelar</button>
+                <label for="editProduto" style="display: block;">Produto:</label>
+                <input type="text" id="editProduto" name="editProduto" required><br><br>
+                <label for="editLogotipo" style="display: block;">Logotipo:</label>
+                <input type="text" id="editLogotipo" name="editLogotipo" required><br><br>
+                <label for="editCusto" style="display: block;">Custo UN:</label>
+                <input type="number" step="0.01" id="editCusto" name="editCusto" required><br><br>
+                <label for="editMaterial" style="display: block;">Material:</label>
+                <input type="text" id="editMaterial" name="editMaterial" required><br><br>
+                <label for="editCor" style="display: block;">Cor:</label>
+                <input type="text" id="editCor" name="editCor" required><br><br>
+                <button type="submit" id="saveBtn" class="save">Salvar</button>
+                <button type="button" id="cancelEditBtn" class="editBtn">Cancelar</button>
             </form>
         </div>
 
-        <div id="newForm" style="display: none;">
+        <div id="newForm" style="display: none;" >
             <h2>Insira os dados do novo produto:</h2>
             <form id="newItemForm">
-                <label for="produto">Produto:</label>
+                <label for="produto" style="display: block;">Produto:</label>
                 <input type="text" id="produto" name="produto" required><br><br>
-                <label for="logotipo">Logotipo:</label>
+                <label for="logotipo" style="display: block;">Logotipo:</label>
                 <input type="text" id="logotipo" name="logotipo" required><br><br>
-                <label for="custo">Custo UN:</label>
-                <input type="number" id="custoun" name="custoun" required><br><br>
-                <label for="material">Material:</label>
+                <label for="custoun" style="display: block;">Custo UN:</label>
+                <input type="number" step="0.01" id="custoun" name="custoun" required><br><br>
+                <label for="material" style="display: block;">Material:</label>
                 <input type="text" id="material" name="material" required><br><br>
-                <label for="cor">Cor:</label>
+                <label for="cor" style="display: block;">Cor:</label>
                 <input type="text" id="cor" name="cor" required><br><br>
                 <button type="submit" id="saveNewBtn" class="save">Salvar</button>
                 <button type="button" id="cancelNewBtn" class="editBtn">Cancelar</button>
@@ -88,6 +88,9 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"> </script>
     <script>
         $(document).ready(function () {
             const editForm = $('#editForm');
@@ -199,7 +202,8 @@
             });
 
         
-            $('#saveBtn').click(function() {
+            $('#editForm').submit(function(event) {
+                event.preventDefault(); 
                 const id = $('#editId').val();
                 const produtoAtualizado = {
                     produto: $('#editProduto').val(),

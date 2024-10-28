@@ -124,6 +124,13 @@ tbody tr:hover {
 .btn-novo-pedido:hover {
     background-color: #0056b3;
 }
+form label {
+    display: block;
+    margin-bottom: 5px;
+}
+form input {
+    margin-bottom: 15px;
+}
 .editBtn{
 
     background-color: #5d95d1;

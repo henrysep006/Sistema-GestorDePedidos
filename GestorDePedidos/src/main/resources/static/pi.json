@@ -1,15 +1,30 @@
 {
-"pedido":
-[
+  "pedido": [
     {
-"npedido":"",
-"produto":"",
-"cliente":"",
-"status":"",
-"qtd":"",
-"data_de_entrega":""
-}
-
-]
-
+      "npedido": "",
+      "produto": "",
+      "cliente": "",
+      "status": "",
+      "qtd": "",
+      "data_de_entrega": "",
+      "id": ""
+    }],
+  "produto": [
+    {
+      "produto": "",
+      "logotipo": "",
+      "custoun": "",
+      "material": "",
+      "cor": "",
+      "id": ""
+    }],
+  "cliente": [
+    {
+      "id": "",
+      "nome": "",
+      "email": "",
+      "telefone": "",
+      "endereço": "",
+      "pedidos_feitos": ""
+    }]
 }
