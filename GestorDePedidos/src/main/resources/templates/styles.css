@@ -23,7 +23,7 @@ margin: 5px;
     padding: 20px;
 }
 
-/* Cabeçalho com logo */
+
 header {
     display: flex;
     justify-content: center;
@@ -35,14 +35,10 @@ header {
     height: auto;
 }
 
-/* Banner */
-.banner img {
-    width: 100%;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
 
-/* Título */
+
+
+
 h1 {
     text-align: center;
     color: #333;
@@ -50,7 +46,7 @@ h1 {
     font-size: 24px;
 }
 
-/* Tabela de pedidos */
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -72,7 +68,7 @@ tbody tr:hover {
     background-color: #f2f2f2;
 }
 
-/* Botões */
+
 .botoes {
     display: flex;
     justify-content: flex-end;
@@ -106,7 +102,7 @@ tbody tr:hover {
     background-color: #3d8b41;
 }
 
-/* Botão "Novo Pedido" */
+
 .novo-pedido {
     text-align: center;
 }

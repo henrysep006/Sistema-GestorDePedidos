@@ -8,19 +8,15 @@
 </head>
 <body>
     <div class="painel">
-        <!-- Cabeçalho com a logo -->
+      
         <header>
             <div class="logo">
                 <img src="image.png" alt="Logo Empresa">
             </div>
         </header>
 
-        <!-- Banner abaixo do cabeçalho -->
-        <div class="banner">
-            <img src="" alt="">
-        </div>
-
-        <!-- Título "Pedidos Recebidos" -->
+      
+     
         <h1>Pedidos Recebidos</h1>
         <div class="pesquisa">
             <label for="codigoPedido">Buscar Pedido:</label>
@@ -29,7 +25,7 @@
             <button id="buscaPedido" class="save" >Buscar</button>
         </div>
 
-        <!-- Tabela de pedidos -->
+       
         <table id="tabela">
             <thead>
                 <tr>
@@ -47,18 +43,18 @@
                     
                 </tr>
                 
-                <!-- Adicione mais linhas conforme necessário -->
+                
             </tbody>
         </table>
 
 <div id="mensagem"></div>
-        <!-- Botões abaixo da tabela -->
+       
         <div class="botoes">
             <button class="ver-produtos" onclick="window.location.href='verProdutos.html'">Ver Produtos</button>
             <button class="ver-clientes"  onclick="window.location.href='verClientes.html'">Ver Clientes</button>
         </div>
 
-        <!-- Botão "Novo pedido" abaixo -->
+   
         <div class="novo-pedido">
             <button class="btn-novo-pedido" id="new" name="new">Novo Pedido</button>
         </div>
@@ -105,9 +101,7 @@ $(document).ready(function () {
                 function resfazerTabela(){
                     $('#tabela tbody').empty();
               preencherProdutos();
-preencherClientes();      
-
-
+preencherClientes();
                     for (i = 0; i < pedido.length; i++)  {
 
                         let idProduto = pedido[i].produto;
@@ -125,11 +119,7 @@ let nomeCliente = clienteCorrespondente ? clienteCorrespondente.nome : "Cliente 
             $('#tabela tbody').append(novaLinha); 
 
             $('#mensagem').text("");
-
-            
-                 
                 }
-
                 }
             
         
