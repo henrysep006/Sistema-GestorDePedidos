@@ -35,8 +35,5 @@ public class Cliente {
       private String endereco;
     
 
-    @ManyToOne
-    @JoinColumn(name = "pedido_id", nullable = false)
-    @JsonIgnore
-    private Pedidos pedido;
+
 }

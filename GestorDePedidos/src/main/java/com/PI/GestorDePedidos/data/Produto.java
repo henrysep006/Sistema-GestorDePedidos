@@ -33,8 +33,4 @@ public class Produto {
       private String cor;
     
 
-    @ManyToOne
-    @JoinColumn(name = "pedido_id", nullable = false)
-    @JsonIgnore
-    private Pedidos pedido;
 }

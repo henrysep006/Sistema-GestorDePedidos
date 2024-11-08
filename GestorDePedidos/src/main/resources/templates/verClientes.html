@@ -9,14 +9,9 @@
 <body>
     <div class="painel">
         <div style="display: flex; justify-content: right;">
-            <img src="voltar.png" onclick="window.location.href='verPedidos.html'" height="30" width="30" alt="voltar">
+            <img src="voltar.png" th:href="@{/}" height="30" width="30" alt="voltar">
         </div>
-        <header>
-            <div class="logo">
-                <img src="image.png" alt="Logo Empresa">
-            </div>
-        </header>
-
+                <header th:insert="navbar.html"></header>
       
         <h1>Clientes Registrados</h1>
         <div class="pesquisa">

@@ -71,19 +71,15 @@ tbody tr:hover {
 
 .botoes {
     display: flex;
-    justify-content: flex-end;
+    gap: 20px;    
+    justify-content: end;
     margin-bottom: 20px;
 }
-
-.botoes button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    margin-left: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+.botoes a {
+  margin-left: 30px; /* Adiciona 15px de espaço à direita de cada botão */
 }
+
+
 .save{
     background-color: #4CAF50;
     color: white;

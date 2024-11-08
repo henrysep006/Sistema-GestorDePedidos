@@ -33,5 +33,14 @@ public class Pedidos {
     private LocalDate data_pedido;
     private double qtd;
     
+@ManyToOne
+    @JoinColumn(name = "produto_id", nullable = false)
+    @JsonIgnore
+    private Produto produto;
 
+
+@ManyToOne
+    @JoinColumn(name = "cliente_id", nullable = false)
+    @JsonIgnore
+    private Cliente cliente;
 }

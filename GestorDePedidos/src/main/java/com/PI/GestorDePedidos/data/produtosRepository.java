@@ -4,10 +4,17 @@
  */
 package com.PI.GestorDePedidos.data;
 
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 /**
  *
  * @author Henry
  */
-public interface produtosRepository {
+@Repository
+public interface produtosRepository extends JpaRepository<Produto, Integer> {
+    
+ 
     
 }
