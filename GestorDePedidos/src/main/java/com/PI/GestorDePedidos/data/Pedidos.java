@@ -45,15 +45,4 @@ public class Pedidos {
     private Cliente cliente;
 
 
-public String getProdNome(){
-    
-    
-return produto.getNome();
-}
-
-public String getClieNome(){
-    
-    
-return cliente.getNome();
-}
 }

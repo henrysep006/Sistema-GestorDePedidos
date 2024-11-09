@@ -9,7 +9,9 @@
 <body>
     <div class="painel">
         <div style="display: flex; justify-content: right;">
-            <img src="voltar.png" th:href="@{/}" height="30" width="30" alt="voltar">
+                        <a th:href="@{/}">
+   <img src="voltar.png" th:scr="@{/}" height="30" width="30" alt="voltar">  
+</a>
         </div>
                 <header th:insert="navbar.html"></header>
       
