@@ -6,10 +6,12 @@ package com.PI.GestorDePedidos.services;
 
 import com.PI.GestorDePedidos.data.Cliente;
 import com.PI.GestorDePedidos.data.Pedidos;
+import com.PI.GestorDePedidos.data.PedidosDTO;
 import com.PI.GestorDePedidos.data.Produto;
 import com.PI.GestorDePedidos.data.clientesRepository;
 import com.PI.GestorDePedidos.data.pedidosRepository;
 import com.PI.GestorDePedidos.data.produtosRepository;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -119,8 +121,13 @@ public class Services {
     
     //PEDIDOS//
     
-      public Pedidos criarPedido(Pedidos pedido){
+      public Pedidos criarPedido(int idProd, int idClie, Pedidos pedido){
      
+         Produto prod= getProdById(idProd);
+          pedido.setProduto(prod);
+          
+          Cliente clie= getClieById(idClie);
+          pedido.setCliente(clie);
         pedRepo.save(pedido);
         
         return pedido;
@@ -132,13 +139,13 @@ public class Services {
         return pedRepo.findById(id).orElse(null);
         
     }
-    public Pedidos atualizarCliente(Integer id, Pedidos request){
+    public Pedidos atualizarPedido(Integer id, Pedidos request){
         
         Pedidos ped= getPedById(id);
         
  ped.setCliente(request.getCliente());
  ped.setData_entrega(request.getData_entrega());
- ped.setData_pedido(request.getData_pedido());
+
  ped.setNpedido(request.getNpedido());
  ped.setProduto(request.getProduto());
  ped.setQtd(request.getQtd());
@@ -161,11 +168,22 @@ public class Services {
         return pedRepo.findAll();
     }
 
+    public List<PedidosDTO> getTodosPedComNomes() {
+    List<PedidosDTO> lista = new ArrayList<>();
     
-    
-    
-    
-    
-    
+    for (Pedidos p : getTodosPed()) {
+        PedidosDTO dto = new PedidosDTO();
+        dto.setNpedido(p.getNpedido());
+        dto.setProdutoNome(p.getProduto().getNome());  // Aqui está buscando o nome do produto
+        dto.setClienteNome(p.getCliente().getNome());  // Aqui está buscando o nome do cliente
+        dto.setStatus(p.getStatus());
+        dto.setData_entrega(p.getData_entrega());
+        dto.setQtd((int) p.getQtd());
+        lista.add(dto);
+    }
+
+    return lista;
+}
+  
     
 }

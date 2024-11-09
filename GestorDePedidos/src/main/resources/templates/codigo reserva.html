@@ -156,3 +156,44 @@
                     }
                 });
             });
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+              function preencherTabela(pedidos, produtos, clientes) {
+                $('#tabela tbody').empty();
+
+                pedidos.forEach(pedido => {
+                    const produtoCorrespondente = produtos.find(p => p.id === pedido.produto);
+                    const nomeProduto = produtoCorrespondente ? produtoCorrespondente.nome : "Produto não encontrado";
+
+                    const clienteCorrespondente = clientes.find(c => c.id === pedido.cliente);
+                    const nomeCliente = clienteCorrespondente ? clienteCorrespondente.nome : "Cliente não encontrado";
+                    
+                    
+                    
+
+
+
+
+
+                    const novaLinha = `
+                        <tr>
+                            <td>${pedido.npedido}</td>
+                            <td>${nomeProduto}</td>
+                            <td>${nomeCliente}</td>
+                            <td>${pedido.status}</td>
+                            <td>${pedido.data_entrega}</td>
+                            <td>${pedido.qtd}</td>
+                        </tr>
+                    `;
+                    $('#tabela tbody').append(novaLinha);
+                });
+            }

@@ -39,8 +39,12 @@ Services Serv;
 
 
  @GetMapping("/")
-public String mostraPedidos(){
+public String mostraPedidos(Model model){
+      Pedidos ped=new Pedidos();
       
+      model.addAttribute("pedido", ped);
+    
+    
     return "verPedidos";
 } 
 
@@ -171,7 +175,13 @@ public String attClie(Model model, @ModelAttribute Cliente clie){
 @PostMapping("/novo-ped")
     public String novoPed(@ModelAttribute Pedidos ped) {
     
-      Serv.criarPedido(ped);
+      
+     
+      
+     
+     int idProd = ped.getProduto().getId();
+     int idClie = ped.getCliente().getId();
+     
      
      
     
@@ -195,7 +205,7 @@ public String attClie(Model model, @ModelAttribute Cliente clie){
         }
     }else{
         ped.setId(Serv.getTodosPed().size()+1);
-        Serv.criarPedido(ped);
+        Serv.criarPedido(idProd, idClie, ped);
         
     }
       

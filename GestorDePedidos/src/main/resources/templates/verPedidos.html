@@ -2,28 +2,22 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-       <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}"> 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Pedidos</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
     <link rel="stylesheet" href="styles.css">
-    
 </head>
 <body>
     <div class="painel">
-      
-                 <header th:insert="navbar.html"></header>
+        <header th:insert="navbar.html"></header>
 
-      
-     
         <h1>Pedidos Recebidos</h1>
         <div class="pesquisa">
             <label for="codigoPedido">Buscar Pedido:</label>
             <input type="text" id="codigoPedido" placeholder="Digite o número do pedido">
-
-            <button id="buscaPedido" class="save" >Buscar</button>
+            <button id="buscaPedido" class="save">Buscar</button>
         </div>
 
-       
         <table id="tabela">
             <thead>
                 <tr>
@@ -31,254 +25,146 @@
                     <th>Produto</th>
                     <th>Cliente</th>
                     <th>Status</th>
-                
                     <th>Data de entrega</th>  
-                      <th>Quantidade</th>
+                    <th>Quantidade</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    
-                </tr>
-                
-                
-            </tbody>
+            <tbody></tbody>
         </table>
 
-<div id="mensagem"></div>
-       
+        <div id="mensagem"></div>
+
         <div class="botoes">
-          <a class="btn btn-success" th:href="@{/produtos}">Ver Produtos</a>
-         <a class="btn btn-success" th:href="@{/clientes}">Ver Clientes</a>
+            <a class="btn btn-success" th:href="@{/produtos}">Ver Produtos</a>
+            <a class="btn btn-success" th:href="@{/clientes}">Ver Clientes</a>
         </div>
 
-   
         <div class="novo-pedido">
-            <button class="btn-novo-pedido" id="new" name="new">Novo Pedido</button>
+            <button class="btn-novo-pedido" id="new">Novo Pedido</button>
         </div>
 
-  
-    <div id="newForm" style="display: none;">
-        <h2>Insira os dados do novo pedido:</h2>
-        <form id="newItemForm">
-            <label for="npedido">N°Pedido:</label>
-            <input type="number" id="npedido" name="npedido" required><br><br>
-            <label for="produto">Produto:</label>
-            <select  id="produto" name="produto" required></select><br><br>
-            <label for="cliente">Cliente:</label>
-            <select id="cliente" name="cliente" required></select><br><br>
-            <label for="status">Status:</label>
-            <input type="text" id="status" name="status" required><br><br>
-            <label for="qtd">Quantidade:</label>
-            <input type="number" id="qtd" name="qtd" required><br><br>
-            <label for="data_entrega">Data de entrega:</label>
-            <input type="date" id="data_entrega" name="data_entrega" required><br><br>
-            <button type="submit" id="saveNewBtn" class="save">Salvar</button>
-            <button type="button" id="cancelNewBtn" class="editBtn">Cancelar</button>
-        </form>
+        <div id="newForm" style="display: none;">
+            <h2>Insira os dados do novo pedido:</h2>
+            <form id="newItemForm"  th:action="@{/novo-ped}" method="POST" th:object="${pedido}">
+                <label for="npedido">N°Pedido:</label>
+                <input th:field="${pedido.npedido}" type="number" id="npedido" name="npedido" required><br><br>
+                <label for="produto">Produto:</label>
+                <select th:field="${pedido.produto}" id="produto" name="produto" required></select><br><br>
+                <label for="cliente">Cliente:</label>
+                <select th:field="${pedido.cliente}" id="cliente" name="cliente" required></select><br><br>
+                <label for="status">Status:</label>
+                <input th:field="${pedido.status}" type="text" id="status" name="status" required><br><br>
+                <label for="qtd">Quantidade:</label>
+                <input th:field="${pedido.qtd}" type="number" id="qtd" name="qtd" required><br><br>
+                <label for="data_entrega">Data de entrega:</label>
+                <input th:field="${pedido.data_entrega}" type="date" id="data_entrega" name="data_entrega" required><br><br>
+                <button type="submit" id="saveNewBtn" class="save">Salvar</button>
+                <button type="button" id="cancelNewBtn" class="editBtn">Cancelar</button>
+            </form>
+        </div>
     </div>
-  </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
 
-    <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"> </script>
-<script>
-$(document).ready(function () {
-
-
-
- 
-    $.get("http://localhost:3000/pedido", function(pedido, status){
-
-        $.get("http://localhost:3000/produto", function(prod, status){
-   $.get("http://localhost:3000/cliente", function(clie, status){
-
-   const newForm = $('#newForm');
-
-                function resfazerTabela(){
-                    $('#tabela tbody').empty();
-              preencherProdutos();
-preencherClientes();
-                    for (i = 0; i < pedido.length; i++)  {
-
-                        let idProduto = pedido[i].produto;
-let produtoCorrespondente = prod.find(p => p.id === idProduto); 
-let nomeProduto = produtoCorrespondente ? produtoCorrespondente.produto : "Produto não encontrado";
-
-                       let idCliente = pedido[i].cliente;
-let clienteCorrespondente = clie.find(c => c.id === idCliente); 
-let nomeCliente = clienteCorrespondente ? clienteCorrespondente.nome : "Cliente não encontrado";
-            var novaLinha = "<tr><td>" + pedido[i].npedido + "</td><td>" +nomeProduto+ 
-                 "</td><td>" + nomeCliente  +  "</td><td>" + pedido[i].status  +  "</td><td>" + pedido[i].data_de_entrega  +
-                  "</td><td>" + pedido[i].qtd  +"</td></tr>";
-
-
-            $('#tabela tbody').append(novaLinha); 
-
-            $('#mensagem').text("");
-                }
-                }
+    <script>
+        $(document).ready(function () {
+            const newForm = $('#newForm');
             
+            
+             function preencherTabela(pedidos, produtos, clientes) {
+    $('#tabela tbody').empty();
+
+    for (let i = 0; i < pedidos.length; i++) {
+        const pedido = pedidos[i];
+
         
+        const novaLinha = `
+            <tr>
+                <td>${pedido.npedido}</td>
+                <td>${pedido.produtoNome}</td>
+                <td>${pedido.clienteNome}</td>
+                <td>${pedido.status}</td>
+                <td>${pedido.data_entrega}</td>
+                <td>${pedido.qtd}</td>
+            </tr>`;
 
-resfazerTabela();
-
-$('#buscaPedido').click(function(){
-  
-const codPedido=$('#codigoPedido').val();
-
-
-$('#tabela tbody').empty();
-$('#mensagem').text("");
-
-if(codPedido){
-
-
-    for (i = 0; i < pedido.length; i++){
-    if(pedido[i].npedido==codPedido){
-
-
-
-        let idProduto = pedido[i].produto;
-
-let produtoCorrespondente = prod.find(p => p.id === idProduto); 
-
-let nomeProduto = produtoCorrespondente ? produtoCorrespondente.produto : "Produto não encontrado";
-
-
-
- let idCliente = pedido[i].cliente;
-let clienteCorrespondente = clie.find(c => c.id === idCliente); 
-let nomeCliente = clienteCorrespondente ? clienteCorrespondente.nome : "Cliente não encontrado";
-
-
-var pedEncontrado = "<tr><td>" + pedido[i].npedido + "</td><td>" + nomeProduto  + 
-     "</td><td>" + nomeCliente  +  "</td><td>" + pedido[i].status  +  "</td><td>" + pedido[i].data_de_entrega  +
-      "</td><td>" + pedido[i].qtd  +"</td></tr>";
-
-
-
-                  $('#tabela tbody').append(pedEncontrado); 
-                  $('#mensagem').text("");
-                  
-
-                 }else {
-                    const tabelaBody = document.querySelector('#tabela tbody');
-
-if(tabelaBody.rows.length===0){
-
-                    $('#mensagem').text("Não achamos pedidos com esse código")
-
+        $('#tabela tbody').append(novaLinha);
+    }
 }
-
-
-
-                 }}
-                 }else{
- $('#mensagem').text("");
-resfazerTabela();
-
-
-
-                 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-})
-
-
-function preencherProdutos() {
-        $.get("http://localhost:3000/produto", function(produtos, status){
-         
-            $('#produto').empty();
-            $('#produto').append('<option value="">Selecione um produto</option>');
-
-         
-            produtos.forEach(function(produto) {
-                $('#produto').append('<option value="' + produto.id + '">' + produto.id + " / " +produto.produto+ '</option>');
-            });
-        });
-    }
-    function preencherClientes() {
-        $.get("http://localhost:3000/cliente", function(cliente, status){
-         
-            $('#cliente').empty();
-            $('#cliente').append('<option value="">Selecione um cliente</option>');
-
-         
-           cliente.forEach(function(cliente) {
-                $('#cliente').append('<option value="' + cliente.id + '">' + cliente.id + " / " +cliente.nome+ '</option>');
-            });
-        });
-    }
-
-$('#newItemForm').submit(function(event) {
-                event.preventDefault(); 
-
-                const novoPedido = {
-
-                    npedido: $('#npedido').val(),
-                    produto: $('#produto').val(),
-                    cliente: $('#cliente').val(),
-                    status: $('#status').val(),
-                    qtd: $('#qtd').val(),
-                    data_de_entrega: $('#data_entrega').val()
-                };
-
-                $.ajax({
-                    url: 'http://localhost:3000/pedido',
-                    method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(novoPedido),
-                    success: function(response) {
-                        alert('Pedido registrado com sucesso!');
-                        newForm.hide();
-                        $('#new').show();
-                        $('#newItemForm')[0].reset(); 
-                        location.reload();
-                        resfazerTabela();
-                    },
-                    error: function() {
-                        $('#new').show();
-                        alert('Erro ao salvar dados no servidor.');
-                    }
+                
+            function carregarDados() {
+                $.get("http://localhost:3000/pedido/listar", function(pedidos) {
+                    $.get("http://localhost:3000/produto/listar", function(prod) {
+                        $.get("http://localhost:3000/cliente/listar", function(clie) {
+                            preencherTabela(pedidos, prod,clie);
+                            
+                        });
+                    });
                 });
+            }
+
+            $('#buscaPedido').click(function () {
+                const codPedido = $('#codigoPedido').val().trim();
+
+                if (codPedido) {
+                    $.get("http://localhost:3000/pedido/listar", function(pedidos) {
+                        const pedidoEncontrado = pedidos.filter(pedido => pedido.npedido === codPedido);
+
+                        if (pedidoEncontrado.length) {
+                            $.get("http://localhost:3000/produto/listar", function(produtos) {
+                                $.get("http://localhost:3000/cliente/listar", function(clientes) {
+                                    preencherTabela(pedidoEncontrado, produtos, clientes);
+                                });
+                            });
+                        } else {
+                            $('#mensagem').text("Não achamos pedidos com esse código");
+                        }
+                    });
+                } else {
+                    $('#mensagem').text("");
+                    carregarDados();
+                }
             });
 
- $('#new').click(function() {
-    $('#new').hide();
+            function preencherProdutos() {
+                $.get("http://localhost:3000/produto/listar", function(produtos) {
+                    $('#produto').empty().append('<option value="">Selecione um produto</option>');
+                    produtos.forEach(produto => {
+                        $('#produto').append(`<option value="${produto.id}">${produto.nome}</option>`);
+                    });
+                });
+            }
+
+            function preencherClientes() {
+                $.get("http://localhost:3000/cliente/listar", function(clientes) {
+                    $('#cliente').empty().append('<option value="">Selecione um cliente</option>');
+                    clientes.forEach(cliente => {
+                        $('#cliente').append(`<option value="${cliente.id}">${cliente.nome}</option>`);
+                    });
+                });
+            }
+
+            
+
+            $('#new').click(function () {
+                $('#new').hide();
+                
+                
+                
                 newForm.show();
+                preencherClientes();
+                preencherProdutos();
             });
 
-            $('#cancelNewBtn').click(function() {
+            $('#cancelNewBtn').click(function () {
                 newForm.hide();
                 $('#new').show();
-                $('#newItemForm')[0].reset(); 
+                $('#newItemForm')[0].reset();
             });
 
-
-
-
-   });
-
-
+            carregarDados();
         });
- }); });
-
-
-</script>
-
+    </script>
 </body>
 </html>

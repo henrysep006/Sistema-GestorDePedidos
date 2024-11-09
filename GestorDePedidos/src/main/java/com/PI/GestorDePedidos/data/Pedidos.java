@@ -30,7 +30,7 @@ public class Pedidos {
     private String npedido;
     private String status;
     private LocalDate data_entrega;
-    private LocalDate data_pedido;
+  
     private double qtd;
     
 @ManyToOne
@@ -43,4 +43,17 @@ public class Pedidos {
     @JoinColumn(name = "cliente_id", nullable = false)
     @JsonIgnore
     private Cliente cliente;
+
+
+public String getProdNome(){
+    
+    
+return produto.getNome();
+}
+
+public String getClieNome(){
+    
+    
+return cliente.getNome();
+}
 }
