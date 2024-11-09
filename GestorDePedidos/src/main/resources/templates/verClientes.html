@@ -16,7 +16,7 @@
         <h1>Clientes Registrados</h1>
         <div class="pesquisa">
             <label for="codigoCliente">Buscar cliente:</label>
-            <input type="text" id="codigoCliente" placeholder="Digite o ID do cliente">
+            <input type="text" id="codigoCliente" placeholder="Digite o nome do cliente">
             <button id="buscaCliente" class="save">Buscar</button>
         </div>
 
@@ -39,17 +39,17 @@
 
         <div id="editForm" style="display: none;">
             <h2>Editar Dados do Cliente</h2>
-            <form id="editform">
+            <form id="editform" th:action="@{/att-clie}" method="POST" th:object="${cliente}">
                 <label for="editId" style="display: block;">ID:</label>
-                <input type="text" id="editId" name="editId" readonly><br><br>
+                <input th:field="${cliente.id}" type="text" id="editId" name="editId" readonly><br><br>
                 <label for="editNome" style="display: block;">Nome:</label>
-                <input type="text" id="editNome" name="editNome" required><br><br>
+                <input  th:field="${cliente.nome}" type="text" id="editNome" name="editNome" required><br><br>
                 <label for="editEmail" style="display: block;">Email:</label>
-                <input type="email" id="editEmail" name="editEmail" required><br><br>
+                <input  th:field="${cliente.email}" type="email" id="editEmail" name="editEmail" required><br><br>
                 <label for="editTelefone" style="display: block;">Telefone:</label>
-                <input type="tel" id="editTelefone" name="editTelefone" pattern="\d{10,11}" required title="Insira apenas números (10 ou 11 dígitos)"><br><br>
+                <input  th:field="${cliente.telefone}" type="tel" id="editTelefone" name="editTelefone" pattern="\d{10,11}" required title="Insira apenas números (10 ou 11 dígitos)"><br><br>
                 <label for="editEndereco" style="display: block;">Endereço:</label>
-                <input type="text" id="editEndereco" name="editEndereco" required><br><br>
+                <input  th:field="${cliente.endereco}" type="text" id="editEndereco" name="editEndereco" required><br><br>
                 <button type="submit" id="saveBtn" class="save">Salvar</button>
                 <button type="button" id="cancelEditBtn" class="editBtn">Cancelar</button>
             </form>
@@ -57,15 +57,15 @@
 
         <div id="newForm" style="display: none;">
             <h2>Insira os dados do novo cliente:</h2>
-            <form id="newItemForm">
+            <form id="newItemForm"  th:action="@{/novo-clie}" method="POST" th:object="${cliente}">
                 <label for="nome" style="display: block;">Nome:</label>
-                <input type="text" id="nome" name="nome" required><br><br>
+                <input  th:field="${cliente.nome}" type="text" id="nome" name="nome" required><br><br>
                 <label for="email" style="display: block;">Email:</label>
-                <input type="email" id="email" name="email" required><br><br>
+                <input  th:field="${cliente.email}" type="email" id="email" name="email" required><br><br>
                 <label for="telefone" style="display: block;">Telefone:</label>
-                <input type="tel" id="telefone" name="telefone" required><br><br>
+                <input  th:field="${cliente.telefone}" type="tel" id="telefone" name="telefone" required><br><br>
                 <label for="endereco" style="display: block;">Endereço:</label>
-                <input type="text" id="endereco" name="endereco" required><br><br>
+                <input th:field="${cliente.endereco}" type="text" id="endereco" name="endereco" required><br><br>
      
                 <button type="submit" id="saveNewBtn" class="save">Salvar</button>
                 <button type="button" id="cancelNewBtn" class="editBtn">Cancelar</button>
@@ -100,7 +100,7 @@
                             <td>${cliente.nome}</td>
                             <td>${cliente.email}</td>
                             <td>${cliente.telefone}</td>
-                            <td>${cliente.endereço}</td>
+                            <td>${cliente.endereco}</td>
                        
                             <td>
                                 <button class='editBtn' data-id="${cliente.id}">Editar</button>
@@ -119,7 +119,7 @@
                             <td>${cliente.nome}</td>
                             <td>${cliente.email}</td>
                             <td>${cliente.telefone}</td>
-                            <td>${cliente.endereço}</td>
+                            <td>${cliente.endereco}</td>
                       
                             <td>
                                 <button class='editBtn' data-id="${cliente.id}">Editar</button>
@@ -130,7 +130,7 @@
                 });
             }
 
-            $.get("http://localhost:3000/cliente", function(data) {
+            $.get("http://localhost:3000/cliente/listar", function(data) {
                 preencherTabela(data);
             });
 
@@ -139,43 +139,15 @@
                 editForm.hide();
             });
 
-            $('#newItemForm').submit(function(event) {
-                event.preventDefault();
-
-                const novoCliente = {
-                    nome: $('#nome').val(),
-                    email: $('#email').val(),
-                    telefone: $('#telefone').val(),
-                    endereço: $('#endereco').val(),
-                    pedidos_feitos: $('#pedidosFeitos').val(),
-                };
-
-                $.ajax({
-                    url: 'http://localhost:3000/cliente',
-                    method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(novoCliente),
-                    success: function(response) {
-                        alert('Cliente registrado com sucesso!');
-                        newForm.hide();
-                        $('#newItemForm')[0].reset();
-                        $.get("http://localhost:3000/cliente", function(data) {
-                            preencherTabela(data);
-                        });
-                    },
-                    error: function() {
-                        alert('Erro ao salvar dados no servidor.');
-                    }
-                });
-            });
+           
 
             function mostrarFormularioEdicao(cliente) {
                 $('#editId').val(cliente.id);
                 $('#editNome').val(cliente.nome);
                 $('#editEmail').val(cliente.email);
                 $('#editTelefone').val(cliente.telefone);
-                $('#editEndereco').val(cliente.endereço);
-                $('#editPedidosFeitos').val(cliente.pedidos_feitos);
+                $('#editEndereco').val(cliente.endereco);
+            
                 editForm.show();
                 newForm.hide();
             }
@@ -183,40 +155,13 @@
         
             tabelaBody.on('click', '.editBtn', function() {
                 const id = $(this).data('id');
-                $.get(`http://localhost:3000/cliente/${id}`, function(cliente) {
+                $.get(`http://localhost:3000/cliente/pesquisar/${id}`, function(cliente) {
                     mostrarFormularioEdicao(cliente);
                 });
             });
 
     
-              $('#editForm').submit(function(event) {
-                event.preventDefault(); 
-                const id = $('#editId').val();
-                const clienteAtualizado = {
-                    nome: $('#editNome').val(),
-                    email: $('#editEmail').val(),
-                    telefone: $('#editTelefone').val(),
-                    endereço: $('#editEndereco').val(),
-                   
-                };
-
-                $.ajax({
-                    url: `http://localhost:3000/cliente/${id}`,
-                    method: 'PUT',
-                    contentType: 'application/json',
-                    data: JSON.stringify(clienteAtualizado),
-                    success: function() {
-                        alert('Dados atualizados com sucesso!');
-                        editForm.hide();
-                        $.get("http://localhost:3000/cliente", function(data) {
-                            preencherTabela(data);
-                        });
-                    },
-                    error: function() {
-                        alert('Erro ao salvar dados no servidor.');
-                    }
-                });
-            });
+             
 
      
             $('#cancelEditBtn').click(function() {
@@ -232,11 +177,11 @@
                 const id = $(this).data('id');
                 if (confirm('Tem certeza que deseja excluir este cliente?')) {
                     $.ajax({
-                        url: `http://localhost:3000/cliente/${id}`,
+                        url: `http://localhost:3000/cliente/excluir/${id}`,
                         method: 'DELETE',
                         success: function() {
                             alert('Cliente excluído com sucesso!');
-                            $.get("http://localhost:3000/cliente", function(data) {
+                            $.get("http://localhost:3000/cliente/listar", function(data) {
                                 preencherTabela(data);
                             });
                         },
@@ -253,56 +198,52 @@
 $('#buscaCliente').click(
 
 
-            function(){
-
+            function () {
     const nomeCliente = $('#codigoCliente').val().toLowerCase();
 
+    // Limpa a tabela e a mensagem
+    $('#tabela tbody').empty();
+    $('#mensagem').text("");
 
-  $('#tabela tbody').empty();
-  $('#mensagem').text("");
+    // Verifica se foi digitado algo no campo de busca
+    if (nomeCliente) {
+        // Faz a requisição GET para listar todos os clientes
+        $.get("http://localhost:3000/cliente/listar", function (data) {
 
-  if(nomeCliente){
-  $.get("http://localhost:3000/cliente", function(data) {
-      
- 
-      let clienteEncontrado = false;
-     
-      data.forEach(item => {
-        
-          if (item.nome.toLowerCase() === nomeCliente) {
-              
-            
-              clienteEncontrado = true;
-              addBusca([item]);
-          }
+            let clienteEncontrado = false;
 
-      });
+            // Percorre todos os clientes retornados da requisição
+            data.forEach(item => {
+                // Compara o nome do cliente no item com o nome digitado
+                if (item.nome && item.nome.toLowerCase() === nomeCliente) {
+                    clienteEncontrado = true;
+                    // Adiciona o cliente encontrado à tabela
+                    addBusca([item]);
+                }
+            });
 
-      if (!clienteEncontrado) {
-          $('#mensagem').text("Cliente não encontrado.");
-          
-      }
-
-  }).fail(function() {
-     
-      alert('Erro ao buscar o cliente. Verifique o nome informado.');
-      $.get("http://localhost:3000/cliente", function(data) {
-                            preencherTabela(data);
-                        });
-
-  });
-
-
-  
-}else {
-    
-    $.get("http://localhost:3000/cliente", function(data) {
-                            preencherTabela(data);
-                            
-                        });
-    
-}
+            // Se nenhum cliente foi encontrado, exibe a mensagem de "Cliente não encontrado"
+            if (!clienteEncontrado) {
+                $('#mensagem').text("Cliente não encontrado.");
             }
+
+        }).fail(function () {
+            // Caso haja erro na requisição GET, exibe uma mensagem de erro
+            alert('Erro ao buscar o cliente. Verifique o nome informado.');
+
+            // Recarrega a tabela com todos os clientes caso haja erro
+            $.get("http://localhost:3000/cliente/listar", function (data) {
+                preencherTabela(data);
+            });
+        });
+
+    } else {
+        // Se o campo de busca estiver vazio, carrega todos os clientes novamente
+        $.get("http://localhost:3000/cliente/listar", function (data) {
+            preencherTabela(data);
+        });
+    }
+}
 
 
 

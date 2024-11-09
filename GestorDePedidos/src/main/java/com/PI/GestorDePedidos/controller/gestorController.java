@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.PI.GestorDePedidos.controller;
+import com.PI.GestorDePedidos.data.Cliente;
+import com.PI.GestorDePedidos.data.Pedidos;
 import com.PI.GestorDePedidos.data.Produto;
 import com.PI.GestorDePedidos.services.Services;
 import java.time.LocalDateTime;
@@ -33,37 +35,191 @@ public class gestorController {
 @Autowired
 Services Serv;
 
+
+
+
  @GetMapping("/")
 public String mostraPedidos(){
       
     return "verPedidos";
 } 
+
+//produtos
  @GetMapping("/produtos")
-public String mostraProdutos(Model model, @ModelAttribute Produto prod){
-    
-      
-      model.addAttribute("produto", prod);
+public String mostraProdutos(Model model){
+    Produto prod = new Produto();  
+    model.addAttribute("produto", prod);
     return "verProdutos";
 } 
 
- @GetMapping("/clientes")
-public String mostraClientes(){
+
+
+@PostMapping("/novo-prod")
+public String novoProd(@ModelAttribute Produto prod) {
+    
+      Serv.criarProduto(prod);
+     
+     
+    
+    if (prod.getId() != null){
+        for(Produto f : Serv.getTodosProd()){
+            if(f.getId()==prod.getId()){
+               
+                       prod.setCor(f.getCor());
+        prod.setCustoun(f.getCustoun());
+        prod.setLogotipo(f.getLogotipo());
+        prod.setMaterial(f.getMaterial());
+        prod.setNome(f.getNome());
+                
+                
+              break;
+            }
+            
+        }
+    }else{
+        prod.setId(Serv.getTodosProd().size()+1);
+        Serv.criarProduto(prod);
+        
+    }
       
+      
+        return "redirect:/produtos";
+    
+    
+}
+
+@PostMapping("/att-prod")
+public String attProd(Model model, @ModelAttribute Produto prod){
+    
+    int i = prod.getId();
+    
+    Serv.atualizarProduto(i, prod);
+    
+  
+  
+         return "redirect:/produtos";
+    
+    
+ 
+    
+}
+
+
+   //clientes
+ @GetMapping("/clientes")
+public String mostraClientes(Model model){
+   Cliente clie = new Cliente();  
+    model.addAttribute("cliente", clie);
     return "verClientes";
 } 
 
-@PostMapping("/novo-filme")
-public String novoProd(Model model, @ModelAttribute Produto prod){
+
+
+@PostMapping("/novo-clie")
+public String novoProd(@ModelAttribute Cliente clie) {
     
-    Serv.criarProduto(prod);
+      Serv.criarCliente(clie);
+     
+     
+    
+    if (clie.getId() != null){
+        for(Cliente f : Serv.getTodosClie()){
+            if(f.getId()==clie.getId()){
+               
+  clie.setEmail(f.getEmail());
+  clie.setEndereco(f.getEndereco());
+  clie.setNome(f.getNome());
+  clie.setTelefone(f.getTelefone());
+  
+                
+              break;
+            }
+            
+        }
+    }else{
+        clie.setId(Serv.getTodosClie().size()+1);
+        Serv.criarCliente(clie);
+        
+    }
+      
+      
+        return "redirect:/clientes";
+    
+    
+}
+
+@PostMapping("/att-clie")
+public String attClie(Model model, @ModelAttribute Cliente clie){
+    
+    int i = clie.getId();
+    
+    Serv.atualizarCliente(i, clie);
+    
+  
+  
+         return "redirect:/clientes";
+    
+    
+ 
+    
+}
+
+
+
+//pedidos
+
+@PostMapping("/novo-ped")
+    public String novoPed(@ModelAttribute Pedidos ped) {
+    
+      Serv.criarPedido(ped);
+     
+     
+    
+    if (ped.getId() != null){
+        for(Pedidos f : Serv.getTodosPed()){
+            if(f.getId()==ped.getId()){
+               
+  ped.setCliente(f.getCliente());
+ ped.setData_entrega(f.getData_entrega());
+
+ ped.setNpedido(f.getNpedido());
+ ped.setProduto(f.getProduto());
+ ped.setQtd(f.getQtd());
+ ped.setStatus(f.getStatus());
+ 
+ 
+                
+              break;
+            }
+            
+        }
+    }else{
+        ped.setId(Serv.getTodosPed().size()+1);
+        Serv.criarPedido(ped);
+        
+    }
+      
+      
+        return "redirect:/";
+    
+    
+}
+
+@PostMapping("/att-ped")
+public String attClie(Model model, @ModelAttribute Pedidos ped){
+    
+    int i = ped.getId();
+    
+    Serv.atualizarPedido(i, ped);
     
   
   
          return "redirect:/";
     
     
-    
-}    
+}
+
+
 
 
 }

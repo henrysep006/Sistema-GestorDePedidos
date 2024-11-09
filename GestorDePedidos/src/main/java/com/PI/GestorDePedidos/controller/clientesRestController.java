@@ -4,7 +4,8 @@
  */
 package com.PI.GestorDePedidos.controller;
 
-import com.PI.GestorDePedidos.data.Produto;
+import com.PI.GestorDePedidos.data.Cliente;
+
 import com.PI.GestorDePedidos.services.Services;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  *
  * @author Henry
- */
-@RestController
-@RequestMapping("/produto")
-public class produtosRestController {
+ */@RestController
+@RequestMapping("/cliente")
+public class clientesRestController {
     
     @Autowired
     Services Serv;
@@ -32,32 +32,32 @@ public class produtosRestController {
     
    
     @GetMapping("/listar")
-public ResponseEntity<List> getProduto(){
+public ResponseEntity<List> getCliente(){
         
-        List<Produto> prod = Serv.getTodosProd();
+        List<Cliente> prod = Serv.getTodosClie();
         
         return new ResponseEntity<>(prod, HttpStatus.OK);
 }
         
         @PostMapping("/adicionar")
-public ResponseEntity<Produto> adicionarProduto(@RequestBody Produto prod) {
+public ResponseEntity<Cliente> adicionarProduto(@RequestBody Cliente clie) {
    
 
- Serv.criarProduto(prod);
-    return new ResponseEntity<>(prod, HttpStatus.CREATED);
+ Serv.criarCliente(clie);
+    return new ResponseEntity<>(clie, HttpStatus.CREATED);
 }
      @GetMapping("/pesquisar/{id}")
-    public ResponseEntity<Produto> pesquisarPorId(@PathVariable Integer id){
+    public ResponseEntity<Cliente> pesquisarPorId(@PathVariable Integer id){
         
-Produto prod = Serv.getProdById(id);
+Cliente clie = Serv.getClieById(id);
  
- return new ResponseEntity<>(prod, HttpStatus.OK);
+ return new ResponseEntity<>(clie, HttpStatus.OK);
         
         
     }
     @DeleteMapping("/excluir/{id}")
-public ResponseEntity<Void> excluirProduto(@PathVariable Integer id) {
-    Serv.deletarProd(id);
+public ResponseEntity<Void> excluirCliente(@PathVariable Integer id) {
+    Serv.deletarClie(id);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 }
 }

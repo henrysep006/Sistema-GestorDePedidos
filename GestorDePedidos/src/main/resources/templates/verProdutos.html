@@ -9,7 +9,7 @@
 <body>
     <div class="painel">
         <div style="display: flex; justify-content: right;">
-            <img src="voltar.png" th:href="@{/}" height="30" width="30" alt="voltar">
+            <img src="voltar.png" th:scr="@{/}" height="30" width="30" alt="voltar">
         </div>
            <header th:insert="navbar.html"></header>
 
@@ -42,9 +42,9 @@
             <h2>Editar Dados</h2>
             <form id="editform"  th:action="@{/att-prod}" method="POST" th:object="${produto}">
                 <label for="editId" style="display: block;">ID:</label>
-                <input  type="text" id="editId" name="editId" readonly><br><br>
+                <input th:field="${produto.id}" type="text" id="editId" name="editId" readonly><br><br>
                 <label for="editProduto" style="display: block;">Produto:</label>
-                <input th:field="${produto.produto}" type="text" id="editProduto" name="editProduto" required><br><br>
+                <input th:field="${produto.nome}" type="text" id="editProduto" name="editProduto" required><br><br>
                 <label for="editLogotipo" style="display: block;">Logotipo:</label>
                 <input th:field="${produto.logotipo}" type="text" id="editLogotipo" name="editLogotipo" required><br><br>
                 <label for="editCusto" style="display: block;">Custo UN:</label>
@@ -58,24 +58,23 @@
             </form>
         </div>
 
-        <div id="newForm" style="display: none;" >
-            <h2>Insira os dados do novo produto:</h2>
-            <form id="newItemForm" th:action="@{/novo-prod}" method="POST" th:object="${produto}">
-                <label for="produto" style="display: block;">Produto:</label>
-                  <input th:field="${produto.produto}" type="text" id="editProduto" name="editProduto" required><br><br>
-                <label for="editLogotipo" style="display: block;">Logotipo:</label>
-                <input th:field="${produto.logotipo}" type="text" id="editLogotipo" name="editLogotipo" required><br><br>
-                <label for="editCusto" style="display: block;">Custo UN:</label>
-                <input th:field="${produto.custoun}" type="number" step="0.01" id="editCusto" name="editCusto" required><br><br>
-                <label for="editMaterial" style="display: block;">Material:</label>
-                <input th:field="${produto.material}" type="text" id="editMaterial" name="editMaterial" required><br><br>
-                <label for="editCor" style="display: block;">Cor:</label>
-                <input th:field="${produto.cor}" type="text" id="editCor" name="editCor" required><br><br>
+         <div id="newForm" style="display: none;" >
+     
+       <form id="newItemForm" th:action="@{/novo-prod}" method="POST" th:object="${produto}">
+             <label for="produto">Produto:</label>
+                <input type="text" th:field="${produto.nome}" id="produto" name="produto" required><br><br>
+                <label for="logotipo">Logotipo:</label>
+                <input type="text" th:field="${produto.logotipo}" id="logotipo" name="logotipo" required><br><br>
+                <label for="custo">Custo UN:</label>
+                <input type="number" th:field="${produto.custoun}" id="custoun" name="custoun" required><br><br>
+                <label for="material">Material:</label>
+                <input type="text" th:field="${produto.material}" id="material" name="material" required><br><br>
+                <label for="cor">Cor:</label>
+                <input type="text" th:field="${produto.cor}" id="cor" name="cor" required><br><br>
                 <button type="submit" id="saveNewBtn" class="save">Salvar</button>
                 <button type="button" id="cancelNewBtn" class="editBtn">Cancelar</button>
-            </form>
-        </div>
-
+            </form>        
+  </div>
         <div id="mensagem"></div>
 
         <div class="novo-pedido">
@@ -102,7 +101,7 @@
                     tabelaBody.append(`
                         <tr>
                             <td>${item.id}</td>
-                            <td>${item.produto}</td>
+                            <td>${item.nome}</td>
                             <td>${item.logotipo}</td>
                             <td>${item.custoun}</td>
                             <td>${item.material}</td>
@@ -122,7 +121,7 @@
                     tabelaBody.append(`
                         <tr>
                             <td>${item.id}</td>
-                            <td>${item.produto}</td>
+                            <td>${item.nome}</td>
                             <td>${item.logotipo}</td>
                             <td>${item.custoun}</td>
                             <td>${item.material}</td>
@@ -137,51 +136,36 @@
             }
 
          
-            $.get("http://localhost:3000/produto", function(data) {
+            $.get("http://localhost:3000/produto/listar", function(data) {
                 preencherTabela(data);
             });
 
         
             $('#new').click(function() {
                 newForm.show();
+     
                 editForm.hide();
             });
 
         
-            $('#newItemForm').submit(function(event) {
-                event.preventDefault(); 
-
-                const novoProduto = {
-                    produto: $('#produto').val(),
-                    logotipo: $('#logotipo').val(),
-                    custoun: $('#custoun').val(),
-                    material: $('#material').val(),
-                    cor: $('#cor').val()
-                };
-
-                $.ajax({
-                    url: 'http://localhost:3000/produto',
-                    method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(novoProduto),
-                    success: function(response) {
-                        alert('Produto registrado com sucesso!');
-                        newForm.hide();
-                        $('#newItemForm')[0].reset(); 
-                        $.get("http://localhost:3000/produto", function(data) {
-                            preencherTabela(data);
-                        });
-                    },
-                    error: function() {
-                        alert('Erro ao salvar dados no servidor.');
-                    }
-                });
-            });
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
 
           
             function mostrarFormularioEdicao(item) {
                 $('#editId').val(item.id);
-                $('#editProduto').val(item.produto);
+                $('#editProduto').val(item.nome);
                 $('#editLogotipo').val(item.logotipo);
                 $('#editCusto').val(item.custoun);
                 $('#editMaterial').val(item.material);
@@ -192,41 +176,14 @@
 
             tabelaBody.on('click', '.editBtn', function() {
                 const id = $(this).data('id');
-                $.get(`http://localhost:3000/produto/${id}`, function(item) {
+                $.get(`http://localhost:3000/produto/pesquisar/${id}`, function(item) {
                     mostrarFormularioEdicao(item);
+                    newForm.hide();
                 });
             });
 
         
-            $('#editForm').submit(function(event) {
-                event.preventDefault(); 
-                const id = $('#editId').val();
-                const produtoAtualizado = {
-                    produto: $('#editProduto').val(),
-                    logotipo: $('#editLogotipo').val(),
-                    custoun: $('#editCusto').val(),
-                    material: $('#editMaterial').val(),
-                    cor: $('#editCor').val()
-                };
-
-                $.ajax({
-                    url: `http://localhost:3000/produto/${id}`,
-                    method: 'PUT',
-                    contentType: 'application/json',
-                    data: JSON.stringify(produtoAtualizado),
-                    success: function() {
-                        alert('Dados atualizados com sucesso!');
-                        editForm.hide();
-               
-                        $.get("http://localhost:3000/produto", function(data) {
-                            preencherTabela(data);
-                        });
-                    },
-                    error: function() {
-                        alert('Erro ao salvar dados no servidor.');
-                    }
-                });
-            });
+      
 
             $('#cancelEditBtn').click(function() {
                 editForm.hide();
@@ -241,78 +198,74 @@
           
             tabelaBody.on('click', '.deleteBtn', function() {
                 const id = $(this).data('id');
-                if (confirm('Tem certeza que deseja excluir este produto?')) {
-                    $.ajax({
-                        url: `http://localhost:3000/produto/${id}`,
-                        method: 'DELETE',
-                        success: function() {
-                            alert('Produto excluído com sucesso!');
-                         
-                            $.get("http://localhost:3000/produto", function(data) {
-                                preencherTabela(data);
-                            });
-                        },
-                        error: function() {
-                            alert('Erro ao excluir o produto.');
-                        }
-                    });
+        
+                 
+                 
+                  fetch(`/produto/excluir/`+id, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.ok) {
+                    if(confirm("Tem certeza que deseja deletar esse produto?")){
+                    window.location.href = "/produtos";}
+                } else {
+                 
+                    console.error('Erro ao deletar o objeto.');
                 }
+            })
+            .catch(error => console.error('Erro:', error));
+                 
+                
             });
 
             $('#buscaProduto').click(
 
 
-            function(){
+            function () {
+    const nomeProduto = $('#codigoProduto').val().toLowerCase();
+
   
+    $('#tabela tbody').empty();
+    $('#mensagem').text("");
 
-  const nomeProduto = $('#codigoProduto').val().toLowerCase();
-
-
-  $('#tabela tbody').empty();
-  $('#mensagem').text("");
-
-  if(nomeProduto){
-  $.get("http://localhost:3000/produto", function(data) {
+  
+    if (nomeProduto) {
       
- 
-      let produtoEncontrado = false;
-     
-      data.forEach(item => {
+        $.get("http://localhost:3000/produto/listar", function (data) {
+
+            let produtoEncontrado = false;
+
+            data.forEach(item => {
         
-          if (item.produto.toLowerCase() === nomeProduto) {
-              
-            
-              produtoEncontrado = true;
-              addBusca([item]);
-          }
+                if (item.nome && item.nome.toLowerCase() === nomeProduto) {
+                    produtoEncontrado = true;
+                 
+                    addBusca([item]);
+                }
+            });
 
-      });
-
-      if (!produtoEncontrado) {
-          $('#mensagem').text("Produto não encontrado.");
-          
-      }
-
-  }).fail(function() {
-     
-      alert('Erro ao buscar o produto. Verifique o nome informado.');
-      $.get("http://localhost:3000/produto", function(data) {
-                            preencherTabela(data);
-                        });
-
-  });
-
-
-  
-}else {
-    
-    $.get("http://localhost:3000/produto", function(data) {
-                            preencherTabela(data);
-
-                        });
-    
-}
+         
+            if (!produtoEncontrado) {
+                $('#mensagem').text("Produto não encontrado.");
             }
+
+        }).fail(function () {
+         
+            alert('Erro ao buscar o produto. Verifique o nome informado.');
+
+ 
+            $.get("http://localhost:3000/produto/listar", function (data) {
+                preencherTabela(data);
+            });
+        });
+
+    } else {
+     
+        $.get("http://localhost:3000/produto/listar", function (data) {
+            preencherTabela(data);
+        });
+    }
+}
 
 
 

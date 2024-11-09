@@ -32,9 +32,12 @@ public class Services {
     //PRODUTOS//
     
     public Produto criarProduto(Produto prod){
-     
+     if(prod!=null){
         prodRepo.save(prod);
-        
+     }
+     else{
+         System.out.println("PRODUTO NULO");
+     }
         return prod;
         
     }
@@ -52,7 +55,7 @@ public class Services {
         prod.setCustoun(request.getCustoun());
         prod.setLogotipo(request.getLogotipo());
         prod.setMaterial(request.getMaterial());
-        prod.setProduto(request.getProduto());
+        prod.setNome(request.getNome());
         
         prodRepo.save(prod);
         

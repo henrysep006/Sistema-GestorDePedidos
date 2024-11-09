@@ -1,0 +1,158 @@
+   $('#newItemForm').submit(function(event) {
+                event.preventDefault(); 
+ const novoProduto = {
+                    nome: $('#nome').val()
+                 
+                };
+
+                $.ajax({
+                    url: 'http://localhost:3000/produto/adicionar',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(novoProduto),
+                    success: function(response) {
+                        alert('Produto registrado com sucesso!');
+                        newForm.hide();
+                        $('#newItemForm')[0].reset(); 
+                        $.get("http://localhost:3000/produto", function(data) {
+                            preencherTabela(data);
+                        });
+                    },
+                    error: function() {
+                        alert('Erro ao salvar dados no servidor.');
+                    }
+                });
+     
+
+
+
+
+
+                $.get("http://localhost:3000/produto/listar", function(data) {
+                    
+                preencherTabela(data);
+            });
+            
+            });
+            
+            
+            
+            
+            
+            
+            
+            
+               $.ajax({
+                        url: `http://localhost:3000/produto/${id}`,
+                        method: 'DELETE',
+                        success: function() {
+                            alert('Produto excluído com sucesso!');
+                         
+                            $.get("http://localhost:3000/produto", function(data) {
+                                preencherTabela(data);
+                            });
+                        },
+                        error: function() {
+                            alert('Erro ao excluir o produto.');
+                        }
+                    });
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+                  $('#editForm').submit(function(event) {
+                event.preventDefault(); 
+                const id = $('#editId').val();
+              
+  $.get("http://localhost:3000/produto/listar", function(data) {
+                    
+                preencherTabela(data);
+              
+            });
+        });
+            
+            
+            
+            
+            
+             $('#newItemForm').submit(function(event) {
+                event.preventDefault();
+
+                const novoCliente = {
+                    nome: $('#nome').val(),
+                    email: $('#email').val(),
+                    telefone: $('#telefone').val(),
+                    endereço: $('#endereco').val(),
+                    pedidos_feitos: $('#pedidosFeitos').val(),
+                };
+
+                $.ajax({
+                    url: 'http://localhost:3000/cliente',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(novoCliente),
+                    success: function(response) {
+                        alert('Cliente registrado com sucesso!');
+                        newForm.hide();
+                        $('#newItemForm')[0].reset();
+                        $.get("http://localhost:3000/cliente", function(data) {
+                            preencherTabela(data);
+                        });
+                    },
+                    error: function() {
+                        alert('Erro ao salvar dados no servidor.');
+                    }
+                });
+            });
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            $('#newItemForm').submit(function (event) {
+                event.preventDefault();
+
+                const novoPedido = {
+                    npedido: $('#npedido').val(),
+                    produto: $('#produto').val(),
+                    cliente: $('#cliente').val(),
+                    status: $('#status').val(),
+                    qtd: $('#qtd').val(),
+                    data_de_entrega: $('#data_entrega').val()
+                };
+
+                $.ajax({
+                    url: 'http://localhost:3000/pedido/adicionar',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(novoPedido),
+                    success: function () {
+                        alert('Pedido registrado com sucesso!');
+                        newForm.hide();
+                        $('#new').show();
+                        $('#newItemForm')[0].reset();
+                        carregarDados();
+                    },
+                    error: function () {
+                        alert('Erro ao salvar dados no servidor.');
+                    }
+                });
+            });
