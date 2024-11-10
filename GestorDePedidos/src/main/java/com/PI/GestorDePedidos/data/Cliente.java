@@ -6,12 +6,15 @@ package com.PI.GestorDePedidos.data;
 
 
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 import jakarta.persistence.Table;
+import java.util.List;
 import lombok.AllArgsConstructor;
 
 import lombok.Data;
@@ -33,6 +36,8 @@ public class Cliente {
      private String email;
       private String endereco;
     
+  @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pedidos> pedidos;
 
 
 }

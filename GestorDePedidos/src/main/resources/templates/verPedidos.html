@@ -26,7 +26,8 @@
                     <th>Cliente</th>
                     <th>Status</th>
                     <th>Data de entrega</th>  
-                    <th>Quantidade</th>
+                    <th>Quantidade</th> <th> </th>
+                    
                 </tr>
             </thead>
             <tbody></tbody>
@@ -72,27 +73,89 @@
             const newForm = $('#newForm');
             
             
-             function preencherTabela(pedidos, produtos, clientes) {
+           function preencherTabela(pedidos, produtos, clientes) {
     $('#tabela tbody').empty();
 
     for (let i = 0; i < pedidos.length; i++) {
         const pedido = pedidos[i];
 
-        
         const novaLinha = `
             <tr>
                 <td>${pedido.npedido}</td>
                 <td>${pedido.produtoNome}</td>
                 <td>${pedido.clienteNome}</td>
-                <td>${pedido.status}</td>
+                <td id="status-col-${pedido.id}">${pedido.status}</td>
                 <td>${pedido.data_entrega}</td>
                 <td>${pedido.qtd}</td>
+                <td>
+                    <button class="btn-alterar-status" data-pedido-id="${pedido.id}">Alterar Status</button>
+                </td>
             </tr>`;
 
         $('#tabela tbody').append(novaLinha);
     }
+
+ 
+    $('.btn-alterar-status').click(function () {
+        const pedidoId = $(this).data('pedido-id');
+        alterarStatusPedido(pedidoId);
+    });
 }
-                
+
+function alterarStatusPedido(pedidoId) {
+    const statusCol = $(`#status-col-${pedidoId}`);
+    const currentStatus = statusCol.text().trim();
+
+   
+    statusCol.html(`
+        <select id="status-select-${pedidoId}">
+            <option value="Pendente" ${currentStatus === 'Pendente' ? 'selected' : ''}>Pendente</option>
+            <option value="Concluído" ${currentStatus === 'Concluído' ? 'selected' : ''}>Concluído</option>
+            <option value="Cancelado" ${currentStatus === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
+            <option value="Outro">Outro</option>
+        </select>
+        <input type="text" id="custom-status-${pedidoId}" style="display:none;" placeholder="Digite o status personalizado">
+        <button class="btn-salvar-status" data-pedido-id="${pedidoId}">Salvar</button>
+    `);
+
+  
+    $(`#status-select-${pedidoId}`).change(function () {
+        if ($(this).val() === 'Outro') {
+            $(`#custom-status-${pedidoId}`).show();
+        } else {
+            $(`#custom-status-${pedidoId}`).hide();
+        }
+    });
+}
+
+
+$(document).on('click', '.btn-salvar-status', function () {
+    const pedidoId = $(this).data('pedido-id');
+    const statusSelect = $(`#status-select-${pedidoId}`).val();
+    const customStatus = $(`#custom-status-${pedidoId}`).val();
+
+ 
+    const newStatus = (statusSelect === 'Outro') ? customStatus : statusSelect;
+
+    salvarStatusPedido(pedidoId, newStatus);
+});
+
+function salvarStatusPedido(pedidoId, newStatus) {
+    $.ajax({
+        url: `http://localhost:3000/pedido/atualizarStatus/${pedidoId}`,
+        method: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify({ status: newStatus }),
+        success: function () {
+            $(`#status-col-${pedidoId}`).html(newStatus);
+            alert('Status atualizado com sucesso!');
+        },
+        error: function () {
+            alert('Ocorreu um erro ao atualizar o status.');
+        }
+    });
+}
+    
             function carregarDados() {
                 $.get("http://localhost:3000/pedido/listar", function(pedidos) {
                     $.get("http://localhost:3000/produto/listar", function(prod) {
@@ -156,6 +219,8 @@
                 preencherClientes();
                 preencherProdutos();
             });
+            
+            
 
             $('#cancelNewBtn').click(function () {
                 newForm.hide();

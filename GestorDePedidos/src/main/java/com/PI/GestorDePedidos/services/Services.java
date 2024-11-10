@@ -13,6 +13,7 @@ import com.PI.GestorDePedidos.data.pedidosRepository;
 import com.PI.GestorDePedidos.data.produtosRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -173,6 +174,7 @@ public class Services {
     
     for (Pedidos p : getTodosPed()) {
         PedidosDTO dto = new PedidosDTO();
+         dto.setId(p.getId());
         dto.setNpedido(p.getNpedido());
         dto.setProdutoNome(p.getProduto().getNome());  // Aqui está buscando o nome do produto
         dto.setClienteNome(p.getCliente().getNome());  // Aqui está buscando o nome do cliente
@@ -184,6 +186,14 @@ public class Services {
 
     return lista;
 }
+
+     public void atualizarStatus(int id, String novoStatus) {
+        Pedidos pedido = pedRepo.findById(id)
+            .orElseThrow(() -> new NoSuchElementException("Pedido não encontrado"));
+
+        pedido.setStatus(novoStatus);
+        pedRepo.save(pedido);
+    }
   
     
 }

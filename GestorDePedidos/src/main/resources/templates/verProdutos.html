@@ -42,7 +42,7 @@
         </table>
 
         <div id="editForm" style="display: none;">
-            <h2>Editar Dados</h2>
+            <h2>Editar Dados do produto</h2>
             <form id="editform"  th:action="@{/att-prod}" method="POST" th:object="${produto}">
                 <label for="editId" style="display: block;">ID:</label>
                 <input th:field="${produto.id}" type="text" id="editId" name="editId" readonly><br><br>
@@ -69,7 +69,7 @@
                 <label for="logotipo">Logotipo:</label>
                 <input type="text" th:field="${produto.logotipo}" id="logotipo" name="logotipo" required><br><br>
                 <label for="custo">Custo UN:</label>
-                <input type="number" th:field="${produto.custoun}" id="custoun" name="custoun" required><br><br>
+                <input type="number" th:field="${produto.custoun}" step="0.01" id="custoun" name="custoun" required><br><br>
                 <label for="material">Material:</label>
                 <input type="text" th:field="${produto.material}" id="material" name="material" required><br><br>
                 <label for="cor">Cor:</label>

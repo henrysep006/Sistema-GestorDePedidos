@@ -4,6 +4,7 @@
  */
 package com.PI.GestorDePedidos.data;
 
+import jakarta.persistence.Id;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -12,12 +13,23 @@ import java.util.Date;
  * @author Henry
  */
 public class PedidosDTO {
+    
+    @Id
+    private Integer id;
     private String npedido;
     private String produtoNome;
     private String clienteNome;
     private String status;
     private LocalDate data_entrega;
     private int qtd;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getNpedido() {
         return npedido;
